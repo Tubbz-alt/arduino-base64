@@ -1,6 +1,5 @@
 #include "Base64.h"
-#include <avr/pgmspace.h>
-const char PROGMEM b64_alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const char b64_alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
 		"0123456789+/";
 
@@ -9,7 +8,7 @@ inline void a3_to_a4(unsigned char * a4, unsigned char * a3);
 inline void a4_to_a3(unsigned char * a3, unsigned char * a4);
 inline unsigned char b64_lookup(char c);
 
-int base64_encode(char *output, char *input, int inputLen) {
+int base64_encode(char *output, const char *input, int inputLen) {
 	int i = 0, j = 0;
 	int encLen = 0;
 	unsigned char a3[3];
@@ -21,7 +20,7 @@ int base64_encode(char *output, char *input, int inputLen) {
 			a3_to_a4(a4, a3);
 
 			for(i = 0; i < 4; i++) {
-				output[encLen++] = pgm_read_byte(&b64_alphabet[a4[i]]);
+			  output[encLen++] = b64_alphabet[a4[i]];
 			}
 
 			i = 0;
@@ -36,7 +35,7 @@ int base64_encode(char *output, char *input, int inputLen) {
 		a3_to_a4(a4, a3);
 
 		for(j = 0; j < i + 1; j++) {
-			output[encLen++] = pgm_read_byte(&b64_alphabet[a4[j]]);
+			output[encLen++] = b64_alphabet[a4[j]];
 		}
 
 		while((i++ < 3)) {
@@ -47,7 +46,7 @@ int base64_encode(char *output, char *input, int inputLen) {
 	return encLen;
 }
 
-int base64_decode(char * output, char * input, int inputLen) {
+int base64_decode(char * output, const char * input, int inputLen) {
 	int i = 0, j = 0;
 	int decLen = 0;
 	unsigned char a3[3];
